@@ -1,0 +1,170 @@
+﻿@page "/changesem"
+
+@using BlazorProject.Shared
+@using MudBlazor
+
+<MudContainer>
+    <MudGrid >
+        <MudItem xs="12" sm="6" md="3">
+            <MudTextField @bind-Value="employee.FirstName" Label="First Name" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudTextField @bind-Value="employee.LastName" Label="Last Name" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudTextField @bind-Value="employee.Email" Label="Email" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudDatePicker Label="Date of Birth" @bind-Date="employee.DateOfBrith"/>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudAutocomplete 
+            T="string" 
+            Label="Gender" 
+            @bind-Value="gender" 
+            SearchFunc="@SearchGender" 
+            Variant="Variant.Outlined" />
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">        
+        <MudAutocomplete 
+            T="Department"  
+            Label="Department" 
+            @bind-Value="department" 
+            SearchFunc="@SearchDepartment" 
+            ToStringFunc="@(e=> e==null?null : $"{e.DepartmentName}")" 
+            Variant="Variant.Outlined"/>
+        </MudItem>
+        <br />
+        <MudItem xs="12" sm="6" md="3">
+            <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="Save">Add Employee</MudButton>
+        </MudItem>
+</MudGrid>
+</MudContainer>
+
+<br />
+<MudTable Elevation="25" Items="GetEmployees()" Filter="new Func<Employee, bool>(Search)" @bind-customer="employee" Height="320px">
+    <ToolBarContent>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Update">Save</MudButton>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString" Placeholder="Search for Customers..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>First Name</MudTh>
+        <MudTh>Last Name</MudTh>
+        <MudTh>Email</MudTh>
+        <MudTh>DoB</MudTh>
+        <MudTh>Gender</MudTh> 
+        <MudTh>Department</MudTh>
+        <MudTh>Actions</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.EmployeeId</MudTd>
+        <MudTd DataLabel="FirstName">@context.FirstName</MudTd>
+        <MudTd DataLabel="LastName">@context.LastName</MudTd>
+        <MudTd DataLabel="Email">@context.Email</MudTd>
+        <MudTd DataLabel="DoB">@context.DateOfBrith</MudTd>
+        <MudTd DataLabel="Gender">@context.Gender</MudTd>
+        <MudTd DataLabel="Department">@context.Department.DepartmentName</MudTd>
+        <MudTd DataLabel="">
+            <MudFab @onclick="@(()=>Edit(@context.EmployeeId))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+            <MudFab @onclick="@(()=>Delete(@context.EmployeeId))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code{
+    private Employee employee;
+    private List<Employee> Employees { get; set; }
+    private IEnumerable<Department> Departments { get; set; }
+    private string searchString = "";
+    private string[] GenderNames { get; set; }
+    private string gender;
+    private Department department;
+    Gender g;
+
+    [Inject]
+    public IEmployeeService EmployeeService { get; set; }
+
+    [Inject]
+    public IDepartmentService DepartmentService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        employee = new Employee();
+        department = new Department();
+        GenderNames = Enum.GetNames(typeof(Gender));
+        Employees = (await EmployeeService.GetAllEmployees()).ToList();
+        Departments = (await DepartmentService.GetAllDepartments()).ToList();
+    }
+    public List<Employee> GetEmployees()
+    {
+        return Employees;
+    }
+
+    private bool Search(Employee employee)
+    {
+        if (string.IsNullOrWhiteSpace(searchString)) return true;
+        if (employee.FirstName.Contains(searchString, StringComparison.OrdinalIgnoreCase)
+            || employee.LastName.Contains(searchString, StringComparison.OrdinalIgnoreCase)
+            || employee.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+        return false;
+    }
+    private async void Save()
+    {
+        employee.Department = department;
+        employee.DepartmentId = department.DepartmentId;
+        Enum.TryParse(gender, out g);
+        employee.Gender = g;
+        await EmployeeService.AddEmployee(employee);
+        Employees = (await EmployeeService.GetAllEmployees()).ToList();
+        Clean();
+        StateHasChanged();
+    }
+    private async void Edit(int id)
+    {
+        employee = Employees.FirstOrDefault(c => c.EmployeeId == id);
+        gender = employee.Gender.ToString();
+        department = employee.Department;
+        department.DepartmentId = employee.DepartmentId;
+    }
+    private async void Update()
+    {
+        employee.Department = department;
+        employee.DepartmentId = department.DepartmentId;
+        Enum.TryParse(gender, out g);
+        employee.Gender = g;
+        await EmployeeService.UpdateEmployee(employee);
+        Clean();
+        StateHasChanged();
+    }
+    private async void Delete(int id)
+    {
+        await EmployeeService.DeleteEmployee(id);
+    }
+
+    private async Task<IEnumerable<string>> SearchGender(string value)
+    {
+        return Enum.GetNames(typeof(Gender));
+    }
+
+    private async Task<IEnumerable<Department>> SearchDepartment(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return Departments;
+        return Departments.Where(x => x.DepartmentName.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    private async void Clean()
+    {
+        employee.FirstName = "";
+        employee.LastName = "";
+        employee.Email = "";
+        employee.DateOfBrith =  null;
+        department.DepartmentName = "";
+        gender = "";
+    }
+}                       

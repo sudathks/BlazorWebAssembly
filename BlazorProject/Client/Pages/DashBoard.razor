@@ -1,0 +1,63 @@
+﻿@page "/"
+@using BlazorProject.Shared
+
+<MudTable Items="@Employees" Filter="new Func<Employee,bool>(FilterFunc1)">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Employee List</MudText>
+        <MudSpacer/>
+        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>ID</MudTh>
+        <MudTh>First Name</MudTh>
+        <MudTh>Last Name</MudTh>
+        <MudTh>Email</MudTh>
+        <MudTh>Gender</MudTh>
+        <MudTh>Department</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="ID">@context.EmployeeId</MudTd>
+        <MudTd DataLabel="First Name">@context.FirstName</MudTd>
+        <MudTd DataLabel="Last Name">@context.LastName</MudTd>
+        <MudTd DataLabel=Email>@context.Email</MudTd>
+        <MudTd DataLabel="Gender">@context.Gender</MudTd>
+        <MudTd DataLabel="Department Name">@context.Department.DepartmentName</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+@code{
+
+    public List<Employee> Employees { get; set; }
+
+    public List<Department> Departments { get; set; }
+
+    [Inject]
+    public IDepartmentService DepartmentService { get; set; }
+
+    [Inject]
+    public IEmployeeService EmployeeService { get; set; }
+
+    private string searchString1 = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        Employees = (await EmployeeService.GetAllEmployees()).ToList();
+        Departments = (await DepartmentService.GetAllDepartments()).ToList();
+    }
+
+    private bool FilterFunc1(Employee element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(Employee element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.FirstName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.LastName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+}
