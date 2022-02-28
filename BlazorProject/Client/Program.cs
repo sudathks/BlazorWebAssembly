@@ -1,3 +1,4 @@
+using Blazor.IndexedDB.Framework;
 using BlazorProject.Client;
 using BlazorProject.Client.Services;
 using Microsoft.AspNetCore.Components.Web;
@@ -20,7 +21,10 @@ builder.Services.AddHttpClient<IDepartmentService, DepartmentService>(client =>
     client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
 });
 
+//builder.Services.AddScoped<IIndexedDbFactory, IndexedDbFactory>();
+
 builder.Services.AddMudServices();
+builder.Services.AddScoped<IndexedEdbStore>();
 
 //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 

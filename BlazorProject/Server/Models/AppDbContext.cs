@@ -31,49 +31,53 @@ namespace BlazorProject.Server.Models
             // Seed Employee Table
             modelBuilder.Entity<Employee>().HasData(new Employee
             {
-                EmployeeId = 1,
+                EmployeeId = Guid.NewGuid(),
                 FirstName = "John",
                 LastName = "Hastings",
                 Email = "David@pragimtech.com",
                 DateOfBrith = new DateTime(1980, 10, 5),
                 Gender = Gender.Male,
                 DepartmentId = 1,
+                LastUpdated = DateTime.Now
                 //PhotoPath = "images/john.png"
             });
 
             modelBuilder.Entity<Employee>().HasData(new Employee
             {
-                EmployeeId = 2,
+                EmployeeId = Guid.NewGuid(),
                 FirstName = "Sam",
                 LastName = "Galloway",
                 Email = "Sam@pragimtech.com",
                 DateOfBrith = new DateTime(1981, 12, 22),
                 Gender = Gender.Male,
                 DepartmentId = 2,
+                LastUpdated = DateTime.Now
                 //PhotoPath = "images/sam.jpg"
             });
 
             modelBuilder.Entity<Employee>().HasData(new Employee
             {
-                EmployeeId = 3,
+                EmployeeId = Guid.NewGuid(),
                 FirstName = "Mary",
                 LastName = "Smith",
                 Email = "mary@pragimtech.com",
                 DateOfBrith = new DateTime(1979, 11, 11),
                 Gender = Gender.Female,
                 DepartmentId = 1,
+                LastUpdated = DateTime.Now
                 //PhotoPath = "images/mary.png"
             });
 
             modelBuilder.Entity<Employee>().HasData(new Employee
             {
-                EmployeeId = 4,
+                EmployeeId = Guid.NewGuid(),
                 FirstName = "Sara",
                 LastName = "Longway",
                 Email = "sara@pragimtech.com",
                 DateOfBrith = new DateTime(1982, 9, 23),
                 Gender = Gender.Female,
                 DepartmentId = 3,
+                LastUpdated = DateTime.Now
                 //PhotoPath = "images/sara.png"
             });
         }

@@ -71,8 +71,8 @@ namespace BlazorProject.Server.Controllers
         //    }
         //}
 
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<Employee>> GetEmployee(int id)
+        [HttpGet("{id:Guid}")]
+        public async Task<ActionResult<Employee>> GetEmployee(Guid id)
         {
             try
             {
@@ -126,8 +126,8 @@ namespace BlazorProject.Server.Controllers
             }
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<ActionResult<Employee>> UpdateEmployee(int id, Employee employee)
+        [HttpPut("{id:Guid}")]
+        public async Task<ActionResult<Employee>> UpdateEmployee(Guid id, Employee employee)
         {
             try
             {
@@ -150,8 +150,8 @@ namespace BlazorProject.Server.Controllers
             }
         }
 
-        [HttpDelete("{id:int}")]
-        public async Task<ActionResult> DeleteEmployee(int id)
+        [HttpDelete("{id:Guid}")]
+        public async Task<ActionResult> DeleteEmployee(Guid id)
         {
             try
             {

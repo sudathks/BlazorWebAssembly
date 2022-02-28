@@ -1,3 +1,4 @@
+using Blazor.IndexedDB.Framework;
 using BlazorProject.Server.Models;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;

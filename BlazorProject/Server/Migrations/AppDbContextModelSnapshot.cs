@@ -62,11 +62,9 @@ namespace BlazorProject.Server.Migrations
 
             modelBuilder.Entity("BlazorProject.Shared.Employee", b =>
                 {
-                    b.Property<int>("EmployeeId")
+                    b.Property<Guid>("EmployeeId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeId"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("DateOfBrith")
                         .HasColumnType("datetime2");
@@ -89,6 +87,9 @@ namespace BlazorProject.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("LastUpdated")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("EmployeeId");
 
                     b.HasIndex("DepartmentId");
@@ -98,43 +99,47 @@ namespace BlazorProject.Server.Migrations
                     b.HasData(
                         new
                         {
-                            EmployeeId = 1,
+                            EmployeeId = new Guid("16ef02e8-02cd-4adc-9c09-17ca0598d3d3"),
                             DateOfBrith = new DateTime(1980, 10, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 1,
                             Email = "David@pragimtech.com",
                             FirstName = "John",
                             Gender = 0,
-                            LastName = "Hastings"
+                            LastName = "Hastings",
+                            LastUpdated = new DateTime(2022, 2, 21, 17, 52, 10, 193, DateTimeKind.Local).AddTicks(6845)
                         },
                         new
                         {
-                            EmployeeId = 2,
+                            EmployeeId = new Guid("7e51b040-7ae0-4533-86d1-c70991f7a96a"),
                             DateOfBrith = new DateTime(1981, 12, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 2,
                             Email = "Sam@pragimtech.com",
                             FirstName = "Sam",
                             Gender = 0,
-                            LastName = "Galloway"
+                            LastName = "Galloway",
+                            LastUpdated = new DateTime(2022, 2, 21, 17, 52, 10, 193, DateTimeKind.Local).AddTicks(6867)
                         },
                         new
                         {
-                            EmployeeId = 3,
+                            EmployeeId = new Guid("f867232a-8b68-4581-9c0a-a3f425f00f2c"),
                             DateOfBrith = new DateTime(1979, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 1,
                             Email = "mary@pragimtech.com",
                             FirstName = "Mary",
                             Gender = 1,
-                            LastName = "Smith"
+                            LastName = "Smith",
+                            LastUpdated = new DateTime(2022, 2, 21, 17, 52, 10, 193, DateTimeKind.Local).AddTicks(6877)
                         },
                         new
                         {
-                            EmployeeId = 4,
+                            EmployeeId = new Guid("92cfb55c-e9e6-4e3d-9470-7be61a17d7aa"),
                             DateOfBrith = new DateTime(1982, 9, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 3,
                             Email = "sara@pragimtech.com",
                             FirstName = "Sara",
                             Gender = 1,
-                            LastName = "Longway"
+                            LastName = "Longway",
+                            LastUpdated = new DateTime(2022, 2, 21, 17, 52, 10, 193, DateTimeKind.Local).AddTicks(6899)
                         });
                 });
 

@@ -27,12 +27,12 @@ namespace BlazorProject.Client.Services
             return await response.Content.ReadFromJsonAsync<Employee>();
         }
 
-        public async Task DeleteEmployee(int employeeId)
+        public async Task DeleteEmployee(Guid employeeId)
         {
             await httpClient.DeleteAsync($"/api/employees/{employeeId}");
         }
 
-        public Task<Employee> GetEmployee(int employeeId)
+        public Task<Employee> GetEmployee(Guid employeeId)
         {
             throw new NotImplementedException();
         }

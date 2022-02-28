@@ -45,7 +45,7 @@ namespace BlazorProject.Server.Models
             return result.Entity;
         }
 
-        public async Task DeleteEmployee(int employeeId)
+        public async Task DeleteEmployee(Guid employeeId)
         {
             var result = await appDbContext.Employees
                 .FirstOrDefaultAsync(e => e.EmployeeId == employeeId);
@@ -57,7 +57,7 @@ namespace BlazorProject.Server.Models
             }
         }
 
-        public async Task<Employee> GetEmployee(int employeeId)
+        public async Task<Employee> GetEmployee(Guid employeeId)
         {
             return await appDbContext.Employees
                 .Include(e => e.Department)

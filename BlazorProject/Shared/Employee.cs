@@ -10,7 +10,7 @@ namespace BlazorProject.Shared
 {
     public class Employee
     {
-        public int EmployeeId { get; set; }
+        public Guid EmployeeId { get; set; }
         [Required]
         [MinLength(2, ErrorMessage = "Minimum 2 characters required")]
         public string FirstName { get; set; }
@@ -23,6 +23,8 @@ namespace BlazorProject.Shared
         public Gender Gender { get; set; }
         public int DepartmentId { get; set; }
         //public string PhotoPath { get; set; }
-        public Department Department { get; set; }    
+        public Department Department { get; set; }
+        [Required]
+        public DateTime LastUpdated { get; set; } = DateTime.Now;
     }
 }
